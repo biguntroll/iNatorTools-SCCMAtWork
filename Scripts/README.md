@@ -2,6 +2,61 @@
 
 This folder contains PowerShell and other scripts used for SCCM automation, maintenance, and troubleshooting.
 
+## Available Scripts
+
+### Export-CollectionToTemplate.ps1
+
+**Purpose**: Exports SCCM collection information to a formatted markdown template file for documentation.
+
+**Category**: Automation / Documentation
+
+**Description**: Connects to an SCCM site, retrieves detailed information about a specified collection, and generates a markdown documentation file based on the collection template format. Automatically extracts all membership rules, schedules, and settings.
+
+**Usage**:
+```powershell
+# Basic usage - exports collection to appropriate Collections folder
+.\Export-CollectionToTemplate.ps1 -CollectionName "PRD-DEV-Patching-Workstations-Group1"
+
+# Specify site code explicitly
+.\Export-CollectionToTemplate.ps1 -CollectionName "PRD-DEV-Patching-Workstations-Group1" -SiteCode "PRD"
+
+# Export to custom directory
+.\Export-CollectionToTemplate.ps1 -CollectionName "PRD-DEV-Patching-Workstations-Group1" -OutputPath "C:\Temp"
+
+# Specify repository root if running from different location
+.\Export-CollectionToTemplate.ps1 -CollectionName "PRD-DEV-Patching-Workstations-Group1" -RepositoryRoot "E:\ClaudeProjects\iNatorTools-SCCMAtWork"
+```
+
+**What it extracts**:
+- Collection name, ID, type, comment
+- Limiting collection
+- Query rules (WQL)
+- Direct membership rules
+- Include/Exclude collection rules
+- Update schedule type
+- Current member count
+- Site information
+
+**Output**:
+- Device collections → `Collections/Device-Collections/[CollectionName].md`
+- User collections → `Collections/User-Collections/[CollectionName].md`
+
+**Requirements**:
+- SCCM Console installed
+- ConfigurationManager PowerShell module
+- Appropriate SCCM permissions to read collections
+- Run from a machine with SCCM console installed
+
+**Next steps after export**:
+1. Review the generated markdown file
+2. Fill in bracketed `[...]` sections with appropriate information
+3. Add explanations for query logic
+4. Specify intended use cases
+5. Add tags for categorization
+6. Commit to repository
+
+---
+
 ## Script Categories
 
 ### Automation Scripts
