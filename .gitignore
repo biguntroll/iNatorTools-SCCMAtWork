@@ -1,0 +1,79 @@
+# SCCM Repository .gitignore
+
+# Sensitive information
+*.credentials
+*.password
+*.secret
+credentials.txt
+secrets.txt
+
+# Personal notes
+*-personal.md
+*-private.md
+notes.txt
+
+# Temporary files
+*.tmp
+*.temp
+*~
+TEMP-*
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Logs
+*.log
+logs/
+
+# Windows system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Package files
+*.msi
+*.exe
+*.zip
+*.cab
+*.7z
+*.wim
+
+# Compiled scripts
+*.ps1.compiled
+
+# Test and draft files
+draft-*
+test-*
+scratch-*
+
+# Export files that may contain sensitive data
+*.xml.export
+*.mof.export
+*-export-*.xml
+
+# Large binary files
+*.iso
+*.vhd
+*.vhdx
+
+# Site-specific configuration (if applicable)
+site-specific/
+*-sitespecific.*
+
+# Documentation builds
+docs/_build/
+docs/_site/
