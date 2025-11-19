@@ -5,11 +5,20 @@ Use this template when creating new collection queries for documentation.
 ## Collection Information
 
 ### Basic Details
-- **Collection Name**: [e.g., DEV-Patching-Workstations-Group1]
+- **Collection Name**: [e.g., PRD-DEV-Patching-Workstations-Group1]
 - **Collection Type**: [Device | User]
 - **Purpose**: [Brief description of what this collection is for]
 - **Limiting Collection**: [What collection is this limited to?]
 - **Update Schedule**: [Full Update | Incremental Update frequency]
+
+### Site Information
+- **Primary Site**: [DEV | TST | PRD | CM1]
+- **Deployed to Sites**:
+  - [x] DEV - Status: [Active/Testing/Planned]
+  - [ ] TST - Status: [Active/Testing/Planned/N/A]
+  - [ ] PRD - Status: [Active/Testing/Planned/N/A]
+  - [ ] CM1 - Status: [Active/Testing/Planned/N/A]
+- **Site-Specific Variations**: [None | Describe any differences between sites]
 
 ### Membership Rules
 
@@ -83,10 +92,16 @@ where [CONDITION]
 ### Important Considerations
 [Any special considerations, caveats, or warnings]
 
+### Promotion History
+| Date | From Site | To Site | Promoted By | Validation Period | Ticket | Notes |
+|------|-----------|---------|-------------|-------------------|--------|-------|
+| YYYY-MM-DD | DEV | TST | [Name] | [X days] | CHG-XXXXX | [Any issues or changes made] |
+| YYYY-MM-DD | TST | PRD | [Name] | [X days] | CHG-XXXXX | [Any issues or changes made] |
+
 ### Change History
-| Date | Author | Change Description |
-|------|--------|-------------------|
-| YYYY-MM-DD | [Name] | Initial creation |
+| Date | Site | Author | Change Description |
+|------|------|--------|-------------------|
+| YYYY-MM-DD | DEV | [Name] | Initial creation |
 
 ## Example Query Patterns
 
@@ -148,13 +163,13 @@ where DateDiff(day, SMS_R_System.LastLogonTimestamp, GetDate()) <= 30
 Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1"
 
 # Set location to SCCM site
-$SiteCode = "XXX"  # Change to your site code
+$SiteCode = "PRD"  # Change to your site code: DEV, TST, PRD, or CM1
 Set-Location "$($SiteCode):"
 
 # Collection variables
-$CollectionName = "[Collection Name]"
+$CollectionName = "PRD-DEV-Patching-Workstations-Group1"  # Use [Site]-DEV-[Purpose]-[Target] format
 $LimitingCollection = "All Systems"  # or appropriate limiting collection
-$Comment = "[Purpose and description]"
+$Comment = "Workstations for patching - Group 1 (Site: $SiteCode)"
 
 # Create new device collection
 $Collection = New-CMDeviceCollection -Name $CollectionName `

@@ -2,6 +2,21 @@
 
 A centralized repository for managing SCCM (System Center Configuration Manager) resources, including collection rules, deployment configurations, applications, scripts, and operational procedures.
 
+## Multi-Site Environment
+
+This repository manages SCCM configurations across **four sites**:
+
+| Site Code | Environment | Purpose |
+|-----------|-------------|---------|
+| **DEV** | Development | Testing and development of SCCM configurations |
+| **TST** | Test/UAT | Pre-production validation and user acceptance testing |
+| **PRD** | Production | Primary production environment |
+| **CM1** | Production | Secondary production site |
+
+**Promotion Workflow**: DEV → TST → PRD/CM1
+
+See [Multi-Site Management Guide](Documentation/multi-site-management.md) for detailed information about managing configurations across sites.
+
 ## Repository Structure
 
 ```
@@ -20,6 +35,7 @@ iNatorTools-SCCMAtWork/
 ├── TaskSequences/            # Task sequence exports and docs
 ├── Configuration-Items/      # Configuration items and baselines
 ├── Reports/                  # Custom SCCM reports and queries
+├── CMPivot/                  # CMPivot queries (site-agnostic)
 ├── Templates/                # Templates for common SCCM tasks
 └── Documentation/            # Guidelines and procedures
 ```
@@ -43,10 +59,11 @@ iNatorTools-SCCMAtWork/
 
 ## Quick Links
 
+- [Multi-Site Management Guide](Documentation/multi-site-management.md) - Managing configurations across DEV, TST, PRD, CM1
+- [Naming Conventions](Documentation/naming-conventions.md) - Site-aware naming standards
 - [Collection Rules Template](Templates/collection-template.md)
 - [Deployment Template](Templates/deployment-template.md)
 - [Best Practices Guide](Documentation/best-practices.md)
-- [Naming Conventions](Documentation/naming-conventions.md)
 
 ## Contributing
 
@@ -60,21 +77,32 @@ When adding new resources to this repository:
 
 ## Naming Conventions
 
-### Collections
-- **Device Collections**: `DEV-[Purpose]-[Target]`
-- **User Collections**: `USR-[Purpose]-[Target]`
+**All SCCM objects must include the site code** to identify which site they belong to.
 
-Example: `DEV-Patching-Workstations`, `USR-SoftwareDeploy-Accounting`
+**Site Codes**: DEV (Development), TST (Test), PRD (Production), CM1 (Secondary Production)
+
+### Collections
+- **Device Collections**: `[Site]-DEV-[Purpose]-[Target]`
+- **User Collections**: `[Site]-USR-[Purpose]-[Target]`
+
+Example: `PRD-DEV-Patching-Workstations`, `TST-USR-SoftwareDeploy-Accounting`
 
 ### Applications
-- **Format**: `[Vendor]-[Product]-[Version]`
+- **Format**: `[Vendor]-[Product]-[Version]` (no site code - shared across sites)
 
-Example: `Adobe-AcrobatReader-DC`, `Microsoft-Office-365`
+Example: `Adobe-AcrobatReader-DC-23.006`, `Microsoft-Office-365-ProPlus`
 
 ### Deployments
-- **Format**: `[Type]-[Target]-[Purpose]-[Date]`
+- **Format**: `[Site]-[Type]-[Target]-[Purpose]-[Date]`
 
-Example: `SW-Workstations-AdobeReader-2025-01`, `UPD-Servers-CriticalPatch-2025-01`
+Example: `PRD-SW-Workstations-AdobeReader-2025-01`, `TST-UPD-Servers-CriticalPatch-2025-01`
+
+### CMPivot Queries
+- **Format**: `CMPivot-[Category]-[Purpose]` (no site code - work across all sites)
+
+Example: `CMPivot-Software-InstalledApps`, `CMPivot-Hardware-LowDiskSpace`
+
+See [Naming Conventions](Documentation/naming-conventions.md) for complete guidelines.
 
 ## Security Notes
 
@@ -100,3 +128,8 @@ Internal use only - Property of [Your Organization]
 - Initial repository structure created
 - Added templates for collections and deployments
 - Created documentation for best practices
+- Configured for multi-site environment (DEV, TST, PRD, CM1)
+- Updated naming conventions to include site codes
+- Added multi-site management guide
+- Added promotion workflow documentation
+- Created CMPivot queries folder

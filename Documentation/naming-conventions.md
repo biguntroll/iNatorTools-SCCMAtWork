@@ -2,19 +2,39 @@
 
 This document defines the naming conventions for all SCCM objects in our environment. Consistent naming ensures clarity, simplifies management, and makes it easier to locate resources.
 
+## Multi-Site Environment
+
+Our organization manages **four SCCM sites**:
+- **DEV**: Development site
+- **TST**: Test/UAT site
+- **PRD**: Production site
+- **CM1**: Secondary production site
+
+**All object names must include the site code** to clearly identify which site they belong to.
+
 ## General Principles
 
-1. **Be Descriptive**: Names should clearly indicate purpose and scope
-2. **Be Consistent**: Follow the same pattern for similar objects
-3. **Be Concise**: Keep names reasonably short while remaining descriptive
-4. **Use Standard Abbreviations**: Use approved abbreviations consistently
-5. **Avoid Special Characters**: Use only letters, numbers, and hyphens
+1. **Include Site Code**: Always prefix with site code (DEV, TST, PRD, CM1)
+2. **Be Descriptive**: Names should clearly indicate purpose and scope
+3. **Be Consistent**: Follow the same pattern for similar objects
+4. **Be Concise**: Keep names reasonably short while remaining descriptive
+5. **Use Standard Abbreviations**: Use approved abbreviations consistently
+6. **Avoid Special Characters**: Use only letters, numbers, and hyphens
 
 ## Standard Abbreviations
 
+### Site Codes
 | Abbreviation | Meaning |
 |--------------|---------|
-| DEV | Device |
+| DEV | Development site |
+| TST | Test/UAT site |
+| PRD | Production site |
+| CM1 | Secondary production site |
+
+### Object Type Abbreviations
+| Abbreviation | Meaning |
+|--------------|---------|
+| DEV | Device (in collection context) |
 | USR | User |
 | SW | Software |
 | UPD | Update |
@@ -34,21 +54,34 @@ This document defines the naming conventions for all SCCM objects in our environ
 | CB | Configuration Baseline |
 | DP | Distribution Point |
 
+**Note**: DEV appears as both a site code and collection type. Context determines meaning:
+- First position = Site code (e.g., **DEV**-DEV-Patching-Workstations)
+- Second position = Collection type (e.g., DEV-**DEV**-Patching-Workstations)
+
 ---
 
 ## Collections
 
 ### Device Collections
 
-**Format**: `DEV-[Purpose]-[Target]-[Qualifier]`
+**Format**: `[Site]-DEV-[Purpose]-[Target]-[Qualifier]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **DEV**: Device collection indicator
+- **[Purpose]**: Collection purpose
+- **[Target]**: Target devices
+- **[Qualifier]**: Optional additional identifier
 
 **Examples**:
-- `DEV-Patching-Workstations-Group1`
-- `DEV-Patching-Workstations-Group2`
-- `DEV-SWDeploy-Finance-Laptops`
-- `DEV-Maintenance-Servers-Weekend`
-- `DEV-Pilot-Win11-Upgrade`
-- `DEV-Inventory-NewDevices-30Days`
+- `DEV-DEV-Patching-Workstations-Group1` (Development site)
+- `TST-DEV-Patching-Workstations-Group1` (Test site)
+- `PRD-DEV-Patching-Workstations-Group1` (Production site)
+- `CM1-DEV-Patching-Workstations-Group1` (CM1 site)
+- `PRD-DEV-SWDeploy-Finance-Laptops`
+- `TST-DEV-Maintenance-Servers-Weekend`
+- `DEV-DEV-Pilot-Win11-Upgrade`
+- `PRD-DEV-Inventory-NewDevices-30Days`
 
 **Purpose Categories**:
 - `Patching`: Update deployments
@@ -70,13 +103,21 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### User Collections
 
-**Format**: `USR-[Purpose]-[Target]-[Qualifier]`
+**Format**: `[Site]-USR-[Purpose]-[Target]-[Qualifier]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **USR**: User collection indicator
+- **[Purpose]**: Collection purpose
+- **[Target]**: Target users
+- **[Qualifier]**: Optional additional identifier
 
 **Examples**:
-- `USR-SWDeploy-Finance-All`
-- `USR-AppAccess-Adobe-Creative`
-- `USR-Compliance-Executives`
-- `USR-Pilot-Office365-EarlyAdopters`
+- `PRD-USR-SWDeploy-Finance-All`
+- `TST-USR-AppAccess-Adobe-Creative`
+- `PRD-USR-Compliance-Executives`
+- `DEV-USR-Pilot-Office365-EarlyAdopters`
+- `CM1-USR-SWDeploy-Finance-All`
 
 ---
 
@@ -84,32 +125,55 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### Software Deployments
 
-**Format**: `SW-[Target]-[Application]-[Date]`
+**Format**: `[Site]-SW-[Target]-[Application]-[Date]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **SW**: Software deployment indicator
+- **[Target]**: Target collection/audience
+- **[Application]**: Application name
+- **[Date]**: Deployment date (YYYY-MM or YYYY-MM-DD)
 
 **Examples**:
-- `SW-Workstations-AdobeReader-2025-01`
-- `SW-Finance-QuickBooks-2025-01`
-- `SW-Pilot-Chrome-122-2025-01`
-- `SW-AllUsers-Office365-2025-01`
+- `PRD-SW-Workstations-AdobeReader-2025-01`
+- `TST-SW-Finance-QuickBooks-2025-01`
+- `DEV-SW-Pilot-Chrome-122-2025-01`
+- `CM1-SW-AllUsers-Office365-2025-01`
 
 ### Update Deployments
 
-**Format**: `UPD-[Target]-[UpdateType]-[Date]`
+**Format**: `[Site]-UPD-[Target]-[UpdateType]-[Date]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **UPD**: Update deployment indicator
+- **[Target]**: Target collection
+- **[UpdateType]**: Type of updates (Critical, Security, FeatureUpdate, etc.)
+- **[Date]**: Deployment date
 
 **Examples**:
-- `UPD-Servers-Critical-2025-01`
-- `UPD-Workstations-Security-2025-01-15`
-- `UPD-Pilot-FeatureUpdate-2025-01`
-- `UPD-SQLServers-CumulativeUpdate-2025-01`
+- `PRD-UPD-Servers-Critical-2025-01`
+- `TST-UPD-Workstations-Security-2025-01-15`
+- `DEV-UPD-Pilot-FeatureUpdate-2025-01`
+- `PRD-UPD-SQLServers-CumulativeUpdate-2025-01`
+- `CM1-UPD-Servers-Critical-2025-01`
 
 ### Configuration Deployments
 
-**Format**: `CFG-[Target]-[Purpose]-[Date]`
+**Format**: `[Site]-CFG-[Target]-[Purpose]-[Date]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **CFG**: Configuration deployment indicator
+- **[Target]**: Target collection
+- **[Purpose]**: Configuration purpose
+- **[Date]**: Deployment date
 
 **Examples**:
-- `CFG-Workstations-BitLocker-2025-01`
-- `CFG-Servers-Firewall-2025-01`
-- `CFG-AllDevices-PasswordPolicy-2025-01`
+- `PRD-CFG-Workstations-BitLocker-2025-01`
+- `TST-CFG-Servers-Firewall-2025-01`
+- `PRD-CFG-AllDevices-PasswordPolicy-2025-01`
+- `CM1-CFG-Workstations-BitLocker-2025-01`
 
 ---
 
@@ -118,6 +182,8 @@ This document defines the naming conventions for all SCCM objects in our environ
 ### Application Packages
 
 **Format**: `[Vendor]-[Product]-[Version]`
+
+**Note**: Applications typically don't include site codes in their names as they represent the software package itself, which is often shared across sites. However, track site deployment status in documentation.
 
 **Examples**:
 - `Adobe-AcrobatReader-DC-23.006`
@@ -131,6 +197,8 @@ This document defines the naming conventions for all SCCM objects in our environ
 - Use full version number when tracking versions
 - For continuously updated products (Office 365), omit version or use generic identifier
 - Maintain consistency with vendor's product naming
+- Applications can be promoted across sites without renaming
+- Track which sites have the application in documentation
 
 ### Application Deployment Types
 
@@ -147,23 +215,39 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### Update Groups
 
-**Format**: `SUG-[UpdateType]-[Year]-[Month]-[Target]`
+**Format**: `[Site]-SUG-[UpdateType]-[Year]-[Month]-[Target]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **SUG**: Software Update Group indicator
+- **[UpdateType]**: Type of updates (Critical, Security, FeatureUpdate, etc.)
+- **[Year]-[Month]**: Time period (YYYY-MM or YYYY-QX)
+- **[Target]**: Target audience
 
 **Examples**:
-- `SUG-Critical-2025-01-AllSystems`
-- `SUG-Security-2025-01-Workstations`
-- `SUG-FeatureUpdate-2025-Q1-Pilot`
-- `SUG-Office365-2025-01-Production`
+- `PRD-SUG-Critical-2025-01-AllSystems`
+- `TST-SUG-Security-2025-01-Workstations`
+- `DEV-SUG-FeatureUpdate-2025-Q1-Pilot`
+- `PRD-SUG-Office365-2025-01-Production`
+- `CM1-SUG-Critical-2025-01-AllSystems`
 
 ### Automatic Deployment Rules
 
-**Format**: `ADR-[UpdateType]-[Frequency]-[Target]`
+**Format**: `[Site]-ADR-[UpdateType]-[Frequency]-[Target]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **ADR**: Automatic Deployment Rule indicator
+- **[UpdateType]**: Type of updates
+- **[Frequency]**: Update frequency (Daily, Weekly, Monthly)
+- **[Target]**: Target collection
 
 **Examples**:
-- `ADR-Critical-Monthly-Servers`
-- `ADR-Security-Monthly-Workstations`
-- `ADR-Definitions-Daily-AllSystems`
-- `ADR-Office365-Monthly-Production`
+- `PRD-ADR-Critical-Monthly-Servers`
+- `TST-ADR-Security-Monthly-Workstations`
+- `PRD-ADR-Definitions-Daily-AllSystems`
+- `PRD-ADR-Office365-Monthly-Production`
+- `CM1-ADR-Critical-Monthly-Servers`
 
 ---
 
@@ -171,30 +255,41 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### Operating System Deployment
 
-**Format**: `TS-Deploy-[OS]-[Version]-[Type]`
+**Format**: `[Site]-TS-Deploy-[OS]-[Version]-[Type]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **TS**: Task Sequence indicator
+- **Deploy**: Deployment action
+- **[OS]**: Operating system
+- **[Version]**: OS version
+- **[Type]**: Type/configuration
 
 **Examples**:
-- `TS-Deploy-Win11-23H2-Workstation`
-- `TS-Deploy-Win10-22H2-Laptop`
-- `TS-Deploy-Server2022-Standard`
-- `TS-Deploy-Win11-23H2-UEFI-BitLocker`
+- `PRD-TS-Deploy-Win11-23H2-Workstation`
+- `TST-TS-Deploy-Win10-22H2-Laptop`
+- `PRD-TS-Deploy-Server2022-Standard`
+- `DEV-TS-Deploy-Win11-23H2-UEFI-BitLocker`
+- `CM1-TS-Deploy-Win11-23H2-Workstation`
 
 ### Operating System Upgrade
 
-**Format**: `TS-Upgrade-[FromOS]-to-[ToOS]-[Type]`
+**Format**: `[Site]-TS-Upgrade-[FromOS]-to-[ToOS]-[Type]`
 
 **Examples**:
-- `TS-Upgrade-Win10-to-Win11-InPlace`
-- `TS-Upgrade-Server2019-to-Server2022`
+- `PRD-TS-Upgrade-Win10-to-Win11-InPlace`
+- `TST-TS-Upgrade-Server2019-to-Server2022`
+- `DEV-TS-Upgrade-Win10-to-Win11-InPlace`
 
 ### Custom Task Sequences
 
-**Format**: `TS-[Purpose]-[Target]-[Description]`
+**Format**: `[Site]-TS-[Purpose]-[Target]-[Description]`
 
 **Examples**:
-- `TS-Config-Workstations-BaselineSetup`
-- `TS-Maint-Servers-MonthlyCleanup`
-- `TS-Troubleshoot-Network-Diagnostics`
+- `PRD-TS-Config-Workstations-BaselineSetup`
+- `PRD-TS-Maint-Servers-MonthlyCleanup`
+- `DEV-TS-Troubleshoot-Network-Diagnostics`
+- `CM1-TS-Config-Workstations-BaselineSetup`
 
 ---
 
@@ -202,23 +297,39 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### Configuration Items
 
-**Format**: `CI-[Category]-[Purpose]-[Target]`
+**Format**: `[Site]-CI-[Category]-[Purpose]-[Target]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **CI**: Configuration Item indicator
+- **[Category]**: Category (Security, Compliance, Performance, etc.)
+- **[Purpose]**: Specific purpose
+- **[Target]**: Target devices
 
 **Examples**:
-- `CI-Security-BitLocker-Workstations`
-- `CI-Compliance-PasswordPolicy-AllSystems`
-- `CI-Performance-PowerSettings-Laptops`
-- `CI-Audit-LocalAdmins-Servers`
+- `PRD-CI-Security-BitLocker-Workstations`
+- `TST-CI-Compliance-PasswordPolicy-AllSystems`
+- `PRD-CI-Performance-PowerSettings-Laptops`
+- `PRD-CI-Audit-LocalAdmins-Servers`
+- `CM1-CI-Security-BitLocker-Workstations`
 
 ### Configuration Baselines
 
-**Format**: `CB-[Purpose]-[Target]-[Version]`
+**Format**: `[Site]-CB-[Purpose]-[Target]-[Version]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **CB**: Configuration Baseline indicator
+- **[Purpose]**: Baseline purpose
+- **[Target]**: Target devices
+- **[Version]**: Version number
 
 **Examples**:
-- `CB-SecurityBaseline-Workstations-v1.2`
-- `CB-ComplianceCheck-Servers-v2.0`
-- `CB-CIS-Windows11-Benchmark-v1.0`
-- `CB-STIG-Server2022-Latest`
+- `PRD-CB-SecurityBaseline-Workstations-v1.2`
+- `TST-CB-ComplianceCheck-Servers-v2.0`
+- `PRD-CB-CIS-Windows11-Benchmark-v1.0`
+- `PRD-CB-STIG-Server2022-Latest`
+- `CM1-CB-SecurityBaseline-Workstations-v1.2`
 
 ---
 
@@ -354,29 +465,73 @@ This document defines the naming conventions for all SCCM objects in our environ
 
 ### Maintenance Windows
 
-**Format**: `MW-[Target]-[Schedule]-[Time]`
+**Format**: `[Site]-MW-[Target]-[Schedule]-[Time]`
+
+Where:
+- **[Site]**: Site code (DEV, TST, PRD, CM1)
+- **MW**: Maintenance Window indicator
+- **[Target]**: Target collection
+- **[Schedule]**: Schedule frequency
+- **[Time]**: Time description
 
 **Examples**:
-- `MW-Servers-Monthly-SaturdayNight`
-- `MW-Workstations-Weekly-Sunday`
-- `MW-Critical-Quarterly-Maintenance`
-- `MW-TestEnvironment-Daily-Overnight`
+- `PRD-MW-Servers-Monthly-SaturdayNight`
+- `TST-MW-Workstations-Weekly-Sunday`
+- `PRD-MW-Critical-Quarterly-Maintenance`
+- `DEV-MW-TestEnvironment-Daily-Overnight`
+- `CM1-MW-Servers-Monthly-SundayNight`
+
+---
+
+## CMPivot Queries
+
+### CMPivot Query Naming
+
+**Format**: `CMPivot-[Category]-[Purpose]`
+
+**Note**: CMPivot queries are site-agnostic and work across all sites. No site code needed.
+
+Where:
+- **CMPivot**: Query type indicator
+- **[Category]**: Query category (Software, Hardware, Security, Performance, etc.)
+- **[Purpose]**: What the query does
+
+**Examples**:
+- `CMPivot-Software-InstalledApps-SearchByName`
+- `CMPivot-Hardware-LowDiskSpace-Under10GB`
+- `CMPivot-Security-LocalAdmins-List`
+- `CMPivot-Performance-HighCPU-Over80Percent`
+- `CMPivot-Network-ActiveConnections`
+- `CMPivot-Services-Running-FilterByName`
+- `CMPivot-Updates-PendingReboot-Check`
+
+**Common Categories**:
+- **Software**: Installed software, versions, updates
+- **Hardware**: Disk space, memory, CPU, devices
+- **Security**: Admins, firewall, antivirus, patches
+- **Performance**: CPU, memory, disk usage
+- **Network**: Connections, adapters, configuration
+- **Services**: Running services, status
+- **Updates**: Update status, pending reboots
+- **Inventory**: General system information
 
 ---
 
 ## Special Considerations
 
-### Production vs Test/Pilot
+### Site-Agnostic Objects
 
-Add identifiers for non-production objects:
-- `PILOT-` prefix for pilot collections and deployments
-- `TEST-` prefix for test environments
-- `DEV-` prefix for development (don't confuse with "Device")
+Some objects are shared across all sites and don't require site codes:
+- **Applications**: Represent software packages, shared across sites
+- **CMPivot Queries**: Real-time queries that work across all sites
+- **Reports**: Can query any site's data
+- **Scripts** (optional): Can be shared if environment-agnostic
 
 **Examples**:
-- `PILOT-SW-Workstations-Chrome-122`
-- `TEST-UPD-Servers-January2025`
-- `PILOT-DEV-Patching-IT-Department`
+- `Adobe-AcrobatReader-DC-23.006` (Application)
+- `CMPivot-InstalledSoftware-SearchByName` (CMPivot Query)
+- `RPT-Compliance-Updates-Summary` (Report)
+- `Get-ComputerInventory-Extended.ps1` (Script)
 
 ### Temporary Objects
 
@@ -397,21 +552,24 @@ When including dates in names:
 
 ## Naming Convention Quick Reference
 
-| Object Type | Pattern | Example |
-|-------------|---------|---------|
-| Device Collection | `DEV-[Purpose]-[Target]` | `DEV-Patching-Workstations-Group1` |
-| User Collection | `USR-[Purpose]-[Target]` | `USR-AppAccess-Finance` |
-| Application | `[Vendor]-[Product]-[Version]` | `Adobe-AcrobatReader-DC-23.006` |
-| Software Deployment | `SW-[Target]-[App]-[Date]` | `SW-Finance-QuickBooks-2025-01` |
-| Update Deployment | `UPD-[Target]-[Type]-[Date]` | `UPD-Servers-Critical-2025-01` |
-| Update Group | `SUG-[Type]-[Year]-[Month]` | `SUG-Security-2025-01-Workstations` |
-| ADR | `ADR-[Type]-[Frequency]` | `ADR-Critical-Monthly-Servers` |
-| Task Sequence | `TS-[Action]-[OS]-[Type]` | `TS-Deploy-Win11-23H2-Workstation` |
-| Config Item | `CI-[Category]-[Purpose]` | `CI-Security-BitLocker-Workstations` |
-| Config Baseline | `CB-[Purpose]-[Target]-[Ver]` | `CB-SecurityBaseline-Workstations-v1.2` |
-| Script | `[Verb]-[Noun]-[Purpose].ps1` | `Get-ComputerInventory-Extended.ps1` |
-| Report | `RPT-[Category]-[Purpose]` | `RPT-Compliance-Updates-Summary` |
-| Maintenance Window | `MW-[Target]-[Schedule]` | `MW-Servers-Monthly-SaturdayNight` |
+| Object Type | Pattern | Example | Site Code? |
+|-------------|---------|---------|------------|
+| Device Collection | `[Site]-DEV-[Purpose]-[Target]` | `PRD-DEV-Patching-Workstations-Group1` | ✓ Required |
+| User Collection | `[Site]-USR-[Purpose]-[Target]` | `PRD-USR-AppAccess-Finance` | ✓ Required |
+| Application | `[Vendor]-[Product]-[Version]` | `Adobe-AcrobatReader-DC-23.006` | ✗ No site code |
+| Software Deployment | `[Site]-SW-[Target]-[App]-[Date]` | `PRD-SW-Finance-QuickBooks-2025-01` | ✓ Required |
+| Update Deployment | `[Site]-UPD-[Target]-[Type]-[Date]` | `PRD-UPD-Servers-Critical-2025-01` | ✓ Required |
+| Update Group | `[Site]-SUG-[Type]-[Year]-[Month]` | `PRD-SUG-Security-2025-01-Workstations` | ✓ Required |
+| ADR | `[Site]-ADR-[Type]-[Frequency]` | `PRD-ADR-Critical-Monthly-Servers` | ✓ Required |
+| Task Sequence | `[Site]-TS-[Action]-[OS]-[Type]` | `PRD-TS-Deploy-Win11-23H2-Workstation` | ✓ Required |
+| Config Item | `[Site]-CI-[Category]-[Purpose]` | `PRD-CI-Security-BitLocker-Workstations` | ✓ Required |
+| Config Baseline | `[Site]-CB-[Purpose]-[Target]-[Ver]` | `PRD-CB-SecurityBaseline-Workstations-v1.2` | ✓ Required |
+| Maintenance Window | `[Site]-MW-[Target]-[Schedule]` | `PRD-MW-Servers-Monthly-SaturdayNight` | ✓ Required |
+| CMPivot Query | `CMPivot-[Category]-[Purpose]` | `CMPivot-Software-InstalledApps` | ✗ No site code |
+| Script | `[Verb]-[Noun]-[Purpose].ps1` | `Get-ComputerInventory-Extended.ps1` | ✗ No site code |
+| Report | `RPT-[Category]-[Purpose]` | `RPT-Compliance-Updates-Summary` | ✗ No site code |
+
+**Site Codes**: DEV (Development), TST (Test), PRD (Production), CM1 (Secondary Production)
 
 ---
 

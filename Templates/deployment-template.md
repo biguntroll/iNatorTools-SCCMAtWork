@@ -5,7 +5,7 @@ Use this template when documenting deployments for software, updates, or configu
 ## Deployment Information
 
 ### Basic Details
-- **Deployment Name**: [e.g., SW-Workstations-AdobeReader-2025-01]
+- **Deployment Name**: [e.g., PRD-SW-Workstations-AdobeReader-2025-01]
 - **Deployment Type**: [Software | Software Update | Configuration Baseline | Task Sequence | Script]
 - **Package/Application**: [Name and version]
 - **Purpose**: [Brief description of deployment goal]
@@ -13,8 +13,17 @@ Use this template when documenting deployments for software, updates, or configu
 - **Created Date**: [YYYY-MM-DD]
 - **Deployment Status**: [Planned | Testing | Active | Completed | Suspended]
 
+### Site Information
+- **Primary Site**: [DEV | TST | PRD | CM1]
+- **Deployed to Sites**:
+  - [x] DEV - Status: [Active/Testing/Planned] - Date: [YYYY-MM-DD]
+  - [ ] TST - Status: [Active/Testing/Planned/N/A] - Date: [YYYY-MM-DD]
+  - [ ] PRD - Status: [Active/Testing/Planned/N/A] - Date: [YYYY-MM-DD]
+  - [ ] CM1 - Status: [Active/Testing/Planned/N/A] - Date: [YYYY-MM-DD]
+- **Site-Specific Variations**: [None | Describe any differences between sites]
+
 ### Target Details
-- **Target Collection**: [Collection name]
+- **Target Collection**: [Collection name with site prefix, e.g., PRD-DEV-Patching-Workstations]
 - **Expected Device Count**: [Approximate number]
 - **Target Environment**: [Production | Test | Lab]
 
@@ -211,10 +220,17 @@ Use this template when documenting deployments for software, updates, or configu
 - [ ] [Action item 2]
 - [ ] [Action item 3]
 
+## Promotion History
+
+| Date | From Site | To Site | Success Rate | Issues | Promoted By | Ticket | Notes |
+|------|-----------|---------|--------------|--------|-------------|--------|-------|
+| YYYY-MM-DD | DEV | TST | [XX%] | [None/Describe] | [Name] | CHG-XXXXX | [Validation period, changes made] |
+| YYYY-MM-DD | TST | PRD | [XX%] | [None/Describe] | [Name] | CHG-XXXXX | [Validation period, changes made] |
+
 ## Change History
-| Date | Author | Change Description |
-|------|--------|-------------------|
-| YYYY-MM-DD | [Name] | Initial creation |
+| Date | Site | Author | Change Description |
+|------|------|--------|-------------------|
+| YYYY-MM-DD | DEV | [Name] | Initial creation |
 
 ## PowerShell Deployment Script
 
@@ -223,14 +239,14 @@ Use this template when documenting deployments for software, updates, or configu
 Import-Module "$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1"
 
 # Set location to SCCM site
-$SiteCode = "XXX"  # Change to your site code
+$SiteCode = "PRD"  # Change to your site code: DEV, TST, PRD, or CM1
 Set-Location "$($SiteCode):"
 
 # Deployment variables
-$ApplicationName = "[Application Name]"
-$CollectionName = "[Target Collection]"
+$ApplicationName = "Adobe-AcrobatReader-DC-23.006"
+$CollectionName = "PRD-DEV-Patching-Workstations-Group1"  # Use site-prefixed collection name
 $DeploymentPurpose = "Required"  # or "Available"
-$DeploymentComment = "[Deployment description]"
+$DeploymentComment = "Adobe Reader deployment to Workstations (Site: $SiteCode)"
 
 # Available time (immediate or specific date)
 $AvailableTime = Get-Date
